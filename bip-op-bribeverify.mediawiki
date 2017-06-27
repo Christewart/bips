@@ -51,13 +51,13 @@ The commitment is recorded in a <code>scriptPubKey</code> of the coinbase transa
    1-byte - OP_RETURN (0x6a)
    1-byte - Push the following 32 bytes (0x20)
   32-byte - block hash
- 
-  35th byte and onward have no consensus meaning. 
+
+the 35th byte and onward have no consensus meaning. 
 
 ===OP_BRIBEVERIFY op code===
 
 This op code reads two arguments from the stack. The stack top is expected to be a sidechain id for which this user attempting to blind merge mine for.
-The next element on the stack is expected to be a block hash. This op code looks into the coinbase transaction's output vector at the given index and checks 
+The next element on the stack is expected to be a block hash. This op code looks into the coinbase transaction's output vector at the given index (which is derived from the sidechain id) and checks 
 to see if the hash in the block matches the hash inside of the BRIBEVERIFY program. If the hashes match, the OP_BRIBEVERIFY acts as an OP_NOP. If the 
 comparison between the two hashes fail, the script fails. 
 
@@ -75,8 +75,7 @@ A standard BRIBEVERIFY program has the format:
 Refer to the reference implementation, reproduced below, for the precise
 semantics and detailed rationale for those semantics.
 
-
-
+ 
  case OP_NOP4:
  {
     //format: block_hash sidechain_id OP_BRIBEVERIFY 
@@ -87,16 +86,16 @@ semantics and detailed rationale for those semantics.
         }
         break;
     }
-
+    
     if (stack.size() < 2)
         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-
+ 
     const CScriptNum scriptNumSidechainId(stacktop(-1),fRequireMinimal);
     uint8_t nSidechainId;  
     if (!checker.CheckSidechainId(scriptNumSidechainId,nSidechainId)) {
         return set_error(serror, SCRIPT_ERR_UNKNOWN_SIDECHAIN); 
     }
-
+ 
     // Check block hash
     bool fHashCritical = checker.CheckCriticalHash(stacktop(-2),nSidechainId);
     if (!fHashCritical) {
