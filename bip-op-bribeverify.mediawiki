@@ -40,19 +40,16 @@ bitcoin as a 'reserve currency' for their own network.
 
 ===Commitment Structure===
 
-A new block rule is added which requires that the miner's coinbase reward be at index 0 in the coinbase transaction's output vector.
+A new block rule is added which requires there is one one drivechain commitment per drivechain per block.
 
-It also fixes the witness commitment output to be at index 1 of the coinbase transaction's output vector.
-
-This is needed so we can reliably tell what vout corresponds to what drivechain. For instance, the mimblewimble sidechain 
-could correspond to index 2 of the vector outputs on the coinbase transaction. 
-
-The commitment is recorded in a <code>scriptPubKey</code> of the coinbase transaction. It must be at least 34 bytes in size 
+The commitment is recorded in a <code>scriptPubKey</code> of the coinbase transaction. It must be at least 35 bytes in size 
    1-byte - OP_RETURN (0x6a)
    1-byte - Push the following 32 bytes (0x20)
   32-byte - block hash
+  1 byte - Push operation? (needed if number can't be encoded as OP_0 - OP_16)
+  1-byte - sidechain id
 
-the 35th byte and onward have no consensus meaning. 
+the 36th byte and onward have no consensus meaning. 
 
 ===OP_BRIBEVERIFY op code===
 
