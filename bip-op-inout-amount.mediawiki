@@ -13,7 +13,7 @@
 
 ==Abstract==
 
-This BIP describes a new op code `OP_INOUT_AMOUNT` that pushes the amount
+This BIP describes a new op code `OP_INOUT_AMOUNT` that pushes the
 amount our utxo is funded with and the amount it spending to on the stack.
 
 ==Summary==
@@ -76,7 +76,7 @@ case OP_INOUT_AMOUNT:
 break;
 </source>
 
-https://github.com/Christewart/bitcoin/commits/64bit-arith 
+https://github.com/Christewart/bitcoin/tree/op-inout-amount
 
 ==Deployment==
 
