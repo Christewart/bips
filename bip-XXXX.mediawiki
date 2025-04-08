@@ -27,8 +27,6 @@ Numerous soft fork proposals require support for at least 51 bits of precision i
 While it is thought to be possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the bitcoin protocol]</ref>
 to handle Satoshi values in the original Script programming language, it is very inefficient and error prone.
 
-==Rationale==
-
 ===OP_INOUT_AMOUNT===
 
 OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is
@@ -59,6 +57,9 @@ CTV++<ref>[https://delvingbitcoin.org/t/ctv-op-templatehash-and-op-inputamounts/
 proposal. A new opcode OP_INAMOUNTS is part of this proposal which sums funding output values based on a parameter to the OP_INAMOUNTS opcode.
 
 Since the value of the utxos can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+
+==Rationale==
+
 
 ==Detailed Specification==
 
