@@ -71,6 +71,12 @@ One consideration with not expanding locktime opcodes to accept 8 byte parameter
 If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes Script execution will terminate in with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propogate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]</ref>
 If we were to allow 64 bit numbers for locktime opcodes, users would receive a much more intelligible unsatisfied locktime error message.
 
+===Larger precision than 64 bits===
+
+BIP141<ref>[BIP141 https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics] allows for
+witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits. The purpose
+of this BIP is to lay the ground work for introducing numeric computation on amounts in Script. The infrastructure in this proposal
+could be used in the future to extend precision again if there is user demand for features that require more precision.
 
 ==Detailed Specification==
 
