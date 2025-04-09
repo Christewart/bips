@@ -13,80 +13,81 @@
 
 ==Abstract==
 
-This BIP expands supported precision for operands from -2^<sup>31</sup>+1 up to 2^<sup>31</sup>-1 to -2^<sup>63</sup>+1 up to 2^<sup>63</sup>-1.
-Results from numeric opcodes are expanded from -2^<sup>63</sup> up to 2^<sup>63</sup>-1 to -2^<sup>127</sup> up to 2^<sup>127</sup>-1.
+This BIP extends the supported range of numeric operands in Script from -2^<sup>31</sup>+1 to 2^<sup>31</sup>-1, to -2^<sup>63</sup>+1 to 2^<sup>63</sup>-1.
+The result range for arithmetic operations is expanded from -2^<sup>63</sup> to 2^<sup>63</sup>-1, to -2^<sup>127</sup> to 2^<sup>127</sup>-1.
 
 This BIP upgrades all existing opcodes<ref>[https://github.com/bitcoin/bitcoin/blob/223fc24c4ebc8dbaecf59ccd36e49193b58d422b/src/script/interpreter.cpp#L944 What are the existing opcodes that interpret stack elements as numbers? OP_ADD, OP_SUB, OP_BOOLAND, OP_BOOLOR, OP_NUMEQUAL, OP_NUMEQUALVERIFY, OP_NUMNOTEQUAL, OP_LESSTHAN, OP_GREATERTHAN, OP_LESSTHANOREQUAL, OP_GREATERTHANOREQUAL, OP_MIN, OP_MAX, OP_1ADD, OP_1SUB, OP_NEGATE, OP_ABS, OP_NOT, OP_0NOTEQUAL]</ref>
-that interpret stack elements as numbers to support 64 bit parameters - excluding OP_CHECKTIMELOCKTIMEVERIFY and OP_CHECKSEQUENCEVERIFY.
+that interpret stack elements as numbers to support 64-bit parameters—excluding OP_CHECKTIMELOCKVERIFY and OP_CHECKSEQUENCEVERIFY.
 
-This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 What is the original Script number encoding format? It’s a minimal-length little-endian with sign-magnitude encoding rather than two’s complement]</ref> and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 What is Script's currently handling of number overflows? Arithmetic results may overflow (and are valid as long as they are not used in a subsequent numeric operation). CScriptNum enforces those semantics by storing results as an int64 and allowing out-of-range values to be returned as a vector of bytes but throwing an exception if arithmetic is done or the result is interpreted as an integer]</ref> from the original bitcoin implementation with enhanced precision.
+This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 What is the original Script number encoding format? It’s a minimal-length little-endian with sign-magnitude encoding rather than two’s complement]</ref> and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 What is Script's currently handling of number overflows? Arithmetic results may overflow (and are valid as long as they are not used in a subsequent numeric operation). CScriptNum enforces those semantics by storing results as an int64 and allowing out-of-range values to be returned as a vector of bytes but throwing an exception if arithmetic is done or the result is interpreted as an integer]</ref> from the original Bitcoin implementation, with enhanced precision.
 
 ==Motivation==
 
-Numerous soft fork proposals require support for at least 51 bits of precision in Script to represent satoshi values. 
-While it is thought to be possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the bitcoin protocol]</ref>
-to handle Satoshi values in the original Script programming language, it is very inefficient and error prone.
+Numerous soft fork proposals require support for at least 51 bits of precision in Script to represent satoshi values.
+While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the bitcoin protocol]</ref>
+to handle such values in the original Script, it is inefficient and error-prone.
 
 ===OP_INOUT_AMOUNT===
 
 OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is
 part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATE_VERIFY]</ref> soft fork proposal.
-This opcode pushes two values onto the stack corresponding to input values and output vales of the transaction we are verifying.
+This opcode pushes two values onto the stack corresponding to input values and output values of the transaction being verified.
 
-Since the value of the utxos can be up to 51 bits, we require 64-bit arithmetic operations.
+Since the value of UTXOs can be up to 51 bits, we require 64-bit arithmetic operations.
 
 ===OP_CHECKCONTRACTVERIFY===
 
 OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> is an
 opcode that allows users to create UTXOs that carry a dynamic commitment to a piece of data. When spending
-an OP_CCV utxo it is necessary to also check that the amount of the current UTXO is correctly distributed among the outputs in the expected way.
+an OP_CCV UTXO, it is necessary to also check that the UTXO's value is properly allocated among the outputs.
 
-Since the value of the utxos can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
 ===OP_VAULT===
 
 OP_VAULT<ref>[https://github.com/bitcoin/bips/blob/master/bip-0345.mediawiki OP_VAULT]</ref> is an
-opcode designed to o enforce a delay period before designated coins may be spent to an arbitrary destination,
-with the exception of a prespecified "recovery" path. This opcode requires spending output value to be pushed onto the stack<ref>[https://github.com/bitcoin-inquisition/bitcoin/pull/21/files#diff-a0337ffd7259e8c7c9a7786d6dbd420c80abfa1afdb34ebae3261109d9ae3c19R1377 Where OP_VAULT extends CScriptNum's precision to 7 bytes to correctly interpret the revault amount from the stack]</ref>
+opcode designed to enforce a delay period before designated coins may be spent to an arbitrary destination,
+with the exception of a prespecified "recovery" path. This opcode requires pushing the output's value onto the stack for validation.<ref>[https://github.com/bitcoin-inquisition/bitcoin/pull/21/files#diff-a0337ffd7259e8c7c9a7786d6dbd420c80abfa1afdb34ebae3261109d9ae3c19R1377 Where OP_VAULT extends CScriptNum's precision to 7 bytes to correctly interpret the revault amount from the stack]</ref>
 
-Since the value of the utxos can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
 ===CTV++===
 
 CTV++<ref>[https://delvingbitcoin.org/t/ctv-op-templatehash-and-op-inputamounts/1344 CTV++]</ref> is an enhancement to the original CTV<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki OP_CTV]</ref>
-proposal. A new opcode OP_INAMOUNTS is part of this proposal which sums funding output values based on a parameter to the OP_INAMOUNTS opcode.
+proposal. A new opcode, OP_INAMOUNTS, is part of this proposal, which sums funding output values based on a parameter to the OP_INAMOUNTS opcode.
 
-Since the value of the utxos can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
 ==Rationale==
 
-===OP_CHECKSEQUENCEVERIFY/OP_CHECKLOCKTIMEVERIFY===
+===OP_CHECKSEQUENCEVERIFY / OP_CHECKLOCKTIMEVERIFY===
 
-Both opcodes infer the absolute and relative locktime based on fields that have 32 bits of precision in a bitcoin transaction. Both of these opcodes also
-use median-time-past<ref>[https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki BIP113]</ref> to determine the validity of a transaction in a block.
-The maximum allowed value for median-time-past on the bitcoin network is 0xfffffffe.<ref>[https://github.com/bitcoin/bitcoin/pull/32229 This PR explicitly tests what the maximum median-time-past limit is on the bitcoin network. The results show the maximum median-time-past allowed is 0xffffffffe.]</ref>
+Both opcodes infer the absolute and relative locktime based on fields that have 32 bits of precision in a Bitcoin transaction.
+They also use median-time-past<ref>[https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki BIP113]</ref> to determine the validity of a transaction in a block.
+The maximum allowed value for median-time-past on the Bitcoin network is 0xfffffffe.<ref>[https://github.com/bitcoin/bitcoin/pull/32229 This PR explicitly tests what the maximum median-time-past limit is on the bitcoin network. The results show the maximum median-time-past allowed is 0xffffffffe.]</ref>
 Adding more precision to these opcodes would still result in unsatisfiable output scripts.
 
-One consideration with not expanding locktime opcodes to accept 8 byte parameters is that error messages may be considered misleading.
-If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes Script execution will terminate in with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propogate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]</ref>
-If we were to allow 64 bit numbers for locktime opcodes, users would receive a much more intelligible unsatisfied locktime error message.
+One consideration with not expanding locktime opcodes to accept 8-byte parameters is that error messages may be considered misleading.
+If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes, Script execution will terminate with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propagate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]</ref>
+If we were to allow 64-bit numbers for locktime opcodes, users would receive a clearer locktime failure message.
 
 ===Larger precision than 64 bits===
 
 BIP141<ref>[https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics BIP141]</ref> allows for
-witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits. The purpose
-of this BIP is to lay the ground work for introducing numeric computation on amounts in Script. The infrastructure in this proposal
-could be used in the future to extend precision again if there is user demand for features that require more precision.
+witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits.
+This proposal provides a foundation that could enable future extensions to support even larger numeric ranges, if needed.
 
 ==Detailed Specification==
+
+A reference implementation is available at:
 
 https://github.com/Christewart/bitcoin/commits/64bit-arith-cscriptnum
 
 ==Deployment==
 
-todo
+To be determined.
 
-==Backward Compatibilitygit==
+==Backward Compatibility==
 
 As a soft fork, older software will continue to operate without modification.
 Non-upgraded nodes, however, will consider all tapscripts with leaf version 0x66 as anyone-can-spend scripts.
@@ -94,7 +95,7 @@ They are strongly encouraged to upgrade in order to fully validate the new progr
 
 ==Credits==
 
-This work is borrowed from work done on the elements project, with implementations done by Sanket Kanjalkar and Andrew Poelstra.
+This proposal builds on prior work from the Elements Project, with implementations by Sanket Kanjalkar and Andrew Poelstra.
 
 https://github.com/ElementsProject/elements/pull/1020/files
 
