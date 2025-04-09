@@ -68,7 +68,7 @@ The maximum allowed value for median-time-past on the bitcoin network is 0xfffff
 Adding more precision to these opcodes would still result in unsatisfiable output scripts.
 
 One consideration with not expanding OP_CLTV/OP_CSV to accept 8 byte parameters is that error messages may be considered misleading.
-If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes Script execution will terminate in with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propogate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]
+If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes Script execution will terminate in with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propogate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]</ref>
 If we were to allow 64 bit numbers for OP_CLTV/OP_CSV, users would receive a much more intelligible message unsatisfied locktime error message.
 
 ==Detailed Specification==
