@@ -73,18 +73,12 @@ If we were to allow 64 bit numbers for locktime opcodes, users would receive a m
 
 ===Larger precision than 64 bits===
 
-BIP141<ref>[BIP141 https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics] allows for
+BIP141<ref>[BIP141 https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics]</ref> allows for
 witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits. The purpose
 of this BIP is to lay the ground work for introducing numeric computation on amounts in Script. The infrastructure in this proposal
 could be used in the future to extend precision again if there is user demand for features that require more precision.
 
 ==Detailed Specification==
-
-This proposal deploys a new tapscript leaf version<ref>[https://github.com/bitcoin/bips/blob/deae64bfd31f6938253c05392aa355bf6d7e7605/bip-0341.mediawiki#cite_note-7]</ref> `0x66` to indicate that
-the tapscript intends to support 64-bit numeric operations.
-
-The implementation adds a helper method to interpret the correct precision for a stack element according to the sigversion.
-The sigversion is inferred from the leaf version.
 
 https://github.com/Christewart/bitcoin/commits/64bit-arith-cscriptnum
 
