@@ -73,7 +73,7 @@ If we were to allow 64 bit numbers for locktime opcodes, users would receive a m
 
 ===Larger precision than 64 bits===
 
-BIP141<ref>[BIP141 https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics]</ref> allows for
+BIP141<ref>[https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics BIP141]</ref> allows for
 witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits. The purpose
 of this BIP is to lay the ground work for introducing numeric computation on amounts in Script. The infrastructure in this proposal
 could be used in the future to extend precision again if there is user demand for features that require more precision.
