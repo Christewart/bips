@@ -97,7 +97,7 @@ They are strongly encouraged to upgrade in order to fully validate the new progr
 
 This proposal builds on prior work from the Elements Project, with implementations by Sanket Kanjalkar and Andrew Poelstra.
 
-https://github.com/ElementsProject/elements/pull/1020/files
+Thanks to Ethan Heilman, AJ Towns for conceptual discussions.
 
 ==References==
 
