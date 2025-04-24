@@ -75,7 +75,10 @@ If we were to allow 64-bit numbers for locktime opcodes, users would receive a c
 
 BIP141<ref>[https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics BIP141]</ref> allows for
 witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits.
-This proposal provides a foundation that could enable future extensions to support even larger numeric ranges, if needed.
+
+BIP342<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes size check of initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements bigger than 520 bytes may uplift the limit in a softfork.]</ref>
+allows for new opcodes to circumvent the 520 byte push limit. The purpose of this BIP is to expand the precision of existing opcodes - not create new ones.
+Therefore we could only support upto 4160 bits of precision. Use cases for existing opcodes require no more than 64 bit operands, thus this proposal only extends precision to 64 bits.
 
 ==Detailed Specification==
 
