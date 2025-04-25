@@ -51,9 +51,9 @@ with the exception of a prespecified "recovery" path. This opcode requires pushi
 
 Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
-===CTV===
+===OP_CHECKTEMPLATEVERIFY===
 
-CTV<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki#user-content-OP_AMOUNTVERIFY BIP119]</ref> is a proposed covenant opcode.
+OP_CHECKTEMPLATEVERIFY<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki#user-content-OP_AMOUNTVERIFY BIP119]</ref> is a proposed covenant opcode.
 A future enhancement to OP_CTV called OP_AMOUNTVERIFY could verify the exact amount that is being spent in the transaction, the amount paid as fees,
 or make amount's available in the given output. This could be used to make safer OP_CHECKTEMPLATEVERIFY addresses.
 
