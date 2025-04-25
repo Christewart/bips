@@ -7,7 +7,7 @@
   Comments-URI: https://github.com/bitcoin/bips/wiki/Comments:BIP-?
   Status: Draft
   Type: Standards Track
-  Created: 2023-09-11
+  Created: ???
   License: BSD-3-Clause
 </pre>
 
@@ -17,7 +17,7 @@ This BIP extends the supported range of numeric operands in Script from -2^<sup>
 The result range for arithmetic operations is expanded from -2^<sup>63</sup> to 2^<sup>63</sup>-1, to -2^<sup>127</sup> to 2^<sup>127</sup>-1.
 
 This BIP upgrades all existing opcodes<ref>[https://github.com/bitcoin/bitcoin/blob/223fc24c4ebc8dbaecf59ccd36e49193b58d422b/src/script/interpreter.cpp#L944 What are the existing opcodes that interpret stack elements as numbers? OP_ADD, OP_SUB, OP_BOOLAND, OP_BOOLOR, OP_NUMEQUAL, OP_NUMEQUALVERIFY, OP_NUMNOTEQUAL, OP_LESSTHAN, OP_GREATERTHAN, OP_LESSTHANOREQUAL, OP_GREATERTHANOREQUAL, OP_MIN, OP_MAX, OP_1ADD, OP_1SUB, OP_NEGATE, OP_ABS, OP_NOT, OP_0NOTEQUAL]</ref>
-that interpret stack elements as numbers to support 64-bit parameters—excluding OP_CHECKTIMELOCKVERIFY and OP_CHECKSEQUENCEVERIFY.
+that interpret stack elements as numbers to support 64-bit parameters excluding OP_CHECKTIMELOCKVERIFY and OP_CHECKSEQUENCEVERIFY.
 
 This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 What is the original Script number encoding format? It’s a minimal-length little-endian with sign-magnitude encoding rather than two’s complement]</ref> and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 What is Script's currently handling of number overflows? Arithmetic results may overflow (and are valid as long as they are not used in a subsequent numeric operation). CScriptNum enforces those semantics by storing results as an int64 and allowing out-of-range values to be returned as a vector of bytes but throwing an exception if arithmetic is done or the result is interpreted as an integer]</ref> from the original Bitcoin implementation, with enhanced precision.
 
@@ -74,12 +74,9 @@ If we were to allow 64-bit numbers for locktime opcodes, users would receive a c
 
 ===Larger precision than 64 bits===
 
-BIP141<ref>[https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#user-content-New_script_semantics BIP141]</ref> allows for
-witness stack elements to be less than or equal to 520 bytes in size. This allows for precision up to 4160 bits.
-
 BIP342<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes size check of initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements bigger than 520 bytes may uplift the limit in a softfork.]</ref>
-allows for new opcodes to circumvent the 520 byte push limit. The purpose of this BIP is to expand the precision of existing opcodes - not create new ones.
-Therefore we could only support upto 4160 bits of precision. Use cases for existing opcodes require no more than 64 bit operands, thus this proposal only extends precision to 64 bits.
+allows for new opcodes to circumvent the 520 byte push limit. This could allow for arbitrary precision of numeric opcodes. The purpose of this BIP
+is to lay ground work for amounts on the stack which only requires 64 bits of precision.
 
 ==Detailed Specification==
 
@@ -90,6 +87,8 @@ https://github.com/Christewart/bitcoin/commits/64bit-arith-cscriptnum
 ==Deployment==
 
 To be determined.
+
+This proposal could be deployed in conjunction with any of the new opcode proposals in the Motivation section using Tapscript's OP_SUCCESSx semantics.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki#cite_note-1 How a new opcode be used to extend existing opcode precision? OP_SUCCESSx may also redefine the behavior of existing opcodes so they could work together with the new opcode. For example, if an OP_SUCCESSx-derived opcode works with 64-bit integers, it may also allow the existing arithmetic opcodes in the same script to do the same.]
 
 ==Backward Compatibility==
 
