@@ -24,22 +24,22 @@ This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-ar
 ==Motivation==
 
 Numerous soft fork proposals require support for at least 51 bits of precision in Script to represent satoshi values.
-While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the bitcoin protocol]</ref>
+While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the Bitcoin protocol]</ref>
 to handle such values in the original Script, it is inefficient and error-prone.
 
 ===OP_INOUT_AMOUNT===
 
 OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is
-part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATE_VERIFY]</ref> soft fork proposal.
-This opcode pushes two values onto the stack corresponding to input values and output values of the transaction being verified.
+part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATEVERIFY]</ref> soft fork proposal.
+This opcode pushes two values onto the stack corresponding to the input and output values of the transaction being verified.
 
-Since the value of UTXOs can be up to 51 bits, we require 64-bit arithmetic operations.
+Since the value of UTXOs can be up to 51 bits, 64-bit arithmetic operations are required.
 
 ===OP_CHECKCONTRACTVERIFY===
 
 OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> is an
-opcode that allows users to create UTXOs that carry a dynamic commitment to a piece of data. When spending
-an OP_CCV UTXO, it is necessary to also check that the UTXO's value is properly allocated among the outputs.
+opcode that allows users to create UTXOs carrying a dynamic commitment to a piece of data. When spending
+an OP_CHECKCONTRACTVERIFY UTXO, it is necessary to verify that the UTXO's value is properly allocated among the outputs.
 
 Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
@@ -54,8 +54,8 @@ Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64
 ===OP_CHECKTEMPLATEVERIFY===
 
 OP_CHECKTEMPLATEVERIFY<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki#user-content-OP_AMOUNTVERIFY BIP119]</ref> is a proposed covenant opcode.
-A future enhancement to OP_CTV called OP_AMOUNTVERIFY could verify the exact amount that is being spent in the transaction, the amount paid as fees,
-or make amount's available in the given output. This could be used to make safer OP_CHECKTEMPLATEVERIFY addresses.
+A future enhancement to OP_CHECKTEMPLATEVERIFY, called OP_AMOUNTVERIFY, could verify the exact amount being spent in the transaction, the amount paid as fees,
+or make amounts available in a given output. This could be used to create safer OP_CHECKTEMPLATEVERIFY addresses.
 
 Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
 
