@@ -63,20 +63,21 @@ Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64
 
 ===OP_CHECKSEQUENCEVERIFY / OP_CHECKLOCKTIMEVERIFY===
 
-Both opcodes infer the absolute and relative locktime based on fields that have 32 bits of precision in a Bitcoin transaction.
-They also use median-time-past<ref>[https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki BIP113]</ref> to determine the validity of a transaction in a block.
-The maximum allowed value for median-time-past on the Bitcoin network is 0xfffffffe.<ref>[https://github.com/bitcoin/bitcoin/pull/32229 This PR explicitly tests what the maximum median-time-past limit is on the bitcoin network. The results show the maximum median-time-past allowed is 0xffffffffe.]</ref>
-Adding more precision to these opcodes would still result in unsatisfiable output scripts.
+OP_CHECKSEQUENCEVERIFY and OP_CHECKLOCKTIMEVERIFY interpret absolute and relative locktime values based on transaction fields that are limited to 32 bits of precision.
+Validation of these values also depends on median-time-past as defined in BIP113.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki BIP113]</ref>
+The maximum allowable median-time-past value on the Bitcoin network is 0xfffffffe.<ref>[https://github.com/bitcoin/bitcoin/pull/32229 This PR explicitly tests the maximum median-time-past limit on the Bitcoin network. The results demonstrate that the maximum median-time-past allowed is 0xfffffffe.]</ref>
+Extending the numeric range for these opcodes would not yield additional expressiveness, as resulting scripts would remain unsatisfiable.
 
-One consideration with not expanding locktime opcodes to accept 8-byte parameters is that error messages may be considered misleading.
-If the parameter to OP_CLTV/OP_CSV is larger than 5 bytes, Script execution will terminate with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propagate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)` which doesn't clearly indicate why the Script failed execution]</ref>
-If we were to allow 64-bit numbers for locktime opcodes, users would receive a clearer locktime failure message.
+A potential drawback of not expanding these opcodes to accept 8-byte parameters is the quality of error reporting.
+If an operand passed to OP_CLTV or OP_CSV exceeds 5 bytes, Script execution fails with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propagate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)`, which does not clearly indicate the cause of failure]</ref>
+Allowing 64-bit operands could enable clearer and more informative failure modes when locktime validation fails.
 
 ===Larger precision than 64 bits===
 
-BIP342<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes size check of initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements bigger than 520 bytes may uplift the limit in a softfork.]</ref>
-allows for new opcodes to circumvent the 520 byte push limit. This could allow for arbitrary precision of numeric opcodes. The purpose of this BIP
-is to lay ground work for amounts on the stack which only requires 64 bits of precision.
+BIP342<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes the size check for the initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements larger than 520 bytes could uplift the limit in a soft fork]</ref>
+permits the introduction of new opcodes that bypass the 520-byte push size limitation.
+This mechanism could theoretically allow for arbitrary-precision numeric operations.
+However, the scope of this BIP is intentionally limited to supporting 64 bits of precision, sufficient for expressing native Bitcoin amounts.
 
 ==Detailed Specification==
 
