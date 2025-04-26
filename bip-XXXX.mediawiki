@@ -13,13 +13,15 @@
 
 ==Abstract==
 
-This BIP extends the supported range of numeric operands in Script from -2^<sup>31</sup>+1 to 2^<sup>31</sup>-1, to -2^<sup>63</sup>+1 to 2^<sup>63</sup>-1.
-The result range for arithmetic operations is expanded from -2^<sup>63</sup> to 2^<sup>63</sup>-1, to -2^<sup>127</sup> to 2^<sup>127</sup>-1.
+This BIP proposes to extend the range of numeric operands in Script from -2^<sup>31</sup>+1 to 2^<sup>31</sup>-1, to -2^<sup>63</sup>+1 to 2^<sup>63</sup>-1.
+It further expands the result range for arithmetic operations from -2^<sup>63</sup> to 2^<sup>63</sup>-1, to -2^<sup>127</sup> to 2^<sup>127</sup>-1.
 
-This BIP upgrades all existing opcodes<ref>[https://github.com/bitcoin/bitcoin/blob/223fc24c4ebc8dbaecf59ccd36e49193b58d422b/src/script/interpreter.cpp#L944 What are the existing opcodes that interpret stack elements as numbers? OP_ADD, OP_SUB, OP_BOOLAND, OP_BOOLOR, OP_NUMEQUAL, OP_NUMEQUALVERIFY, OP_NUMNOTEQUAL, OP_LESSTHAN, OP_GREATERTHAN, OP_LESSTHANOREQUAL, OP_GREATERTHANOREQUAL, OP_MIN, OP_MAX, OP_1ADD, OP_1SUB, OP_NEGATE, OP_ABS, OP_NOT, OP_0NOTEQUAL]</ref>
-that interpret stack elements as numbers to support 64-bit parameters, excluding OP_CHECKLOCKTIMEVERIFY and OP_CHECKSEQUENCEVERIFY.
+All existing opcodes<ref>[https://github.com/bitcoin/bitcoin/blob/223fc24c4ebc8dbaecf59ccd36e49193b58d422b/src/script/interpreter.cpp#L944 List of opcodes interpreting stack elements as numbers: OP_ADD, OP_SUB, OP_BOOLAND, OP_BOOLOR, OP_NUMEQUAL, OP_NUMEQUALVERIFY, OP_NUMNOTEQUAL, OP_LESSTHAN, OP_GREATERTHAN, OP_LESSTHANOREQUAL, OP_GREATERTHANOREQUAL, OP_MIN, OP_MAX, OP_1ADD, OP_1SUB, OP_NEGATE, OP_ABS, OP_NOT, OP_0NOTEQUAL]</ref> 
+that interpret stack elements as numbers are upgraded to support 64-bit parameters, with the exception of OP_CHECKTIMELOCKVERIFY and OP_CHECKSEQUENCEVERIFY.
 
-This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 What is the original Script number encoding format? It’s a minimal-length little-endian with sign-magnitude encoding rather than two’s complement]</ref> and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 What is Script's current handling of number overflows? Arithmetic results may overflow (and are valid as long as they are not used in a subsequent numeric operation). CScriptNum enforces those semantics by storing results as an int64 and allowing out-of-range values to be returned as a vector of bytes, but throwing an exception if arithmetic is done or the result is interpreted as an integer]</ref> from the original Bitcoin implementation, with enhanced precision.
+The existing number encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 The original Script number encoding: minimal-length little-endian, sign-magnitude format]</ref> 
+and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 Handling of overflows in Script: CScriptNum stores results as int64, permitting out-of-range values until further arithmetic is performed]</ref> 
+from the original Bitcoin implementation are preserved, while enhancing the supported precision.
 
 ==Motivation==
 
