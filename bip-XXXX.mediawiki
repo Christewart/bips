@@ -87,7 +87,7 @@ https://github.com/Christewart/bitcoin/commits/64bit-arith-cscriptnum
 
 To be determined.
 
-This proposal could be deployed in conjunction with any of the new opcode proposals in the Motivation section using Tapscript's OP_SUCCESSx semantics.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki#cite_note-1 How a new opcode be used to extend existing opcode precision? OP_SUCCESSx may also redefine the behavior of existing opcodes so they could work together with the new opcode. For example, if an OP_SUCCESSx-derived opcode works with 64-bit integers, it may also allow the existing arithmetic opcodes in the same script to do the same.]</ref>
+This proposal could be deployed in conjunction with any of the new opcode proposals in the Motivation section using Tapscript's OP_SUCCESSx semantics.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki#cite_note-1 How a new opcode be used to extend existing opcode precision? OP_SUCCESSx may redefine the behavior of existing opcodes so they could work together with the new opcode. For example, if an OP_SUCCESSx-derived opcode works with 64-bit integers, it may also allow the existing arithmetic opcodes in the same script to do the same.]</ref>
 
 ==Backward Compatibility==
 
