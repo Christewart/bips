@@ -23,41 +23,37 @@ This BIP retains the encoding format<ref>[https://delvingbitcoin.org/t/64-bit-ar
 
 ==Motivation==
 
-Numerous soft fork proposals require support for at least 51 bits of precision in Script to represent satoshi values.
-While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept on how to circumvent the precision limits in the original implementation of the Bitcoin protocol]</ref>
-to handle such values in the original Script, it is inefficient and error-prone.
+Several soft fork proposals require support for at least 51 bits of precision in Script to accurately represent satoshi values.
+While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept demonstrating how to circumvent the precision limits in the original Bitcoin protocol]</ref>
+to operate on such values within the original Script design, doing so is inefficient and error-prone.
 
 ===OP_INOUT_AMOUNT===
 
-OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is
-part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATEVERIFY]</ref> soft fork proposal.
-This opcode pushes two values onto the stack corresponding to the input and output values of the transaction being verified.
+OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is proposed as part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATEVERIFY]</ref> soft fork.
+This opcode pushes two values onto the stack, corresponding to the sum of input values and output values of the transaction being validated.
 
-Since the value of UTXOs can be up to 51 bits, 64-bit arithmetic operations are required.
+Because UTXO values may reach up to 51 bits, supporting 64-bit arithmetic operations is necessary to enable correct manipulation of these values.
 
 ===OP_CHECKCONTRACTVERIFY===
 
-OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> is an
-opcode that allows users to create UTXOs carrying a dynamic commitment to a piece of data. When spending
-an OP_CHECKCONTRACTVERIFY UTXO, it is necessary to verify that the UTXO's value is properly allocated among the outputs.
+OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> enables the creation of UTXOs that commit to dynamic pieces of data.
+When spending an OP_CCV output, it is necessary to verify that the UTXO's value is properly allocated among the transaction outputs.
 
-Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Given that UTXO values may span up to 51 bits, OP_CHECKCONTRACTVERIFY would benefit from 64-bit arithmetic support to perform such verifications.
 
 ===OP_VAULT===
 
-OP_VAULT<ref>[https://github.com/bitcoin/bips/blob/master/bip-0345.mediawiki OP_VAULT]</ref> is an
-opcode designed to enforce a delay period before designated coins may be spent to an arbitrary destination,
-with the exception of a prespecified "recovery" path. This opcode requires pushing the output's value onto the stack for validation.<ref>[https://github.com/bitcoin-inquisition/bitcoin/pull/21/files#diff-a0337ffd7259e8c7c9a7786d6dbd420c80abfa1afdb34ebae3261109d9ae3c19R1377 Where OP_VAULT extends CScriptNum's precision to 7 bytes to correctly interpret the revault amount from the stack]</ref>
+OP_VAULT<ref>[https://github.com/bitcoin/bips/blob/master/bip-0345.mediawiki OP_VAULT]</ref> introduces a mechanism to enforce a delay period before designated coins may be spent to arbitrary destinations, except along a predefined "recovery" path.
+This opcode requires reading the output’s value from the stack for validation.<ref>[https://github.com/bitcoin-inquisition/bitcoin/pull/21/files#diff-a0337ffd7259e8c7c9a7786d6dbd420c80abfa1afdb34ebae3261109d9ae3c19R1377 Where OP_VAULT extends CScriptNum's precision to 7 bytes to correctly interpret the revault amount from the stack]</ref>
 
-Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Since UTXO values may reach 51 bits, OP_VAULT would also benefit from expanded 64-bit arithmetic.
 
 ===OP_CHECKTEMPLATEVERIFY===
 
-OP_CHECKTEMPLATEVERIFY<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki#user-content-OP_AMOUNTVERIFY BIP119]</ref> is a proposed covenant opcode.
-A future enhancement to OP_CHECKTEMPLATEVERIFY, called OP_AMOUNTVERIFY, could verify the exact amount being spent in the transaction, the amount paid as fees,
-or make amounts available in a given output. This could be used to create safer OP_CHECKTEMPLATEVERIFY addresses.
+OP_CHECKTEMPLATEVERIFY (CTV)<ref>[https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki#user-content-OP_AMOUNTVERIFY BIP119]</ref> is a proposed covenant opcode that enables limited forms of transaction pre-commitment.
+A future extension, OP_AMOUNTVERIFY, would allow for verification of the total amount spent, the fee paid, or the amounts assigned to specific outputs.
 
-Since the value of UTXOs can be up to 51 bits, this opcode could benefit from 64-bit arithmetic operations.
+Given that Bitcoin amounts can occupy up to 51 bits, OP_AMOUNTVERIFY and related CTV enhancements would benefit from support for 64-bit arithmetic operations.
 
 ==Rationale==
 
