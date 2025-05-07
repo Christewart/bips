@@ -41,14 +41,14 @@ Because UTXO values may reach up to 51 bits, supporting 64-bit arithmetic operat
 OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> enables the creation of UTXOs that commit to dynamic pieces of data.
 When spending an OP_CCV output, it is necessary to verify that the UTXO's value is properly allocated among the transaction outputs.
 
-Given that UTXO values may span up to 51 bits, OP_CHECKCONTRACTVERIFY would benefit from 64-bit arithmetic support to perform such verifications.
+Given that UTXO values may span up to 51 bits, OP_CHECKCONTRACTVERIFY would benefit from 64-bit arithmetic support to perform such verifications.[https://delvingbitcoin.org/t/op-inout-amount/549/5?u=chris_stewart_5 A case study on how OP_CHECKCONTRACTVERIFY can use 64-bith arithmetic]
 
 ===OP_VAULT===
 
 OP_VAULT<ref>[https://github.com/bitcoin/bips/blob/master/bip-0345.mediawiki OP_VAULT]</ref> introduces a mechanism to enforce a delay period before designated coins may be spent to arbitrary destinations, except along a predefined "recovery" path.
 This opcode requires reading the output’s value from the stack for validation.<ref>[https://github.com/bitcoin-inquisition/bitcoin/pull/21/files#diff-a0337ffd7259e8c7c9a7786d6dbd420c80abfa1afdb34ebae3261109d9ae3c19R1377 Where OP_VAULT extends CScriptNum's precision to 7 bytes to correctly interpret the revault amount from the stack]</ref>
 
-Since UTXO values may reach 51 bits, OP_VAULT would also benefit from expanded 64-bit arithmetic.
+Since UTXO values may reach 51 bits, OP_VAULT would also benefit from expanded 64-bit arithmetic.<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/4 A case study on how OP_VAULT can use 64-bit arithmetic.]</ref>
 
 ===OP_CHECKTEMPLATEVERIFY===
 
