@@ -41,7 +41,7 @@ Because UTXO values may reach up to 51 bits, supporting 64-bit arithmetic operat
 OP_CHECKCONTRACTVERIFY<ref>[https://github.com/bitcoin/bips/pull/1793 OP_CHECKCONTRACTVERIFY]</ref> enables the creation of UTXOs that commit to dynamic pieces of data.
 When spending an OP_CCV output, it is necessary to verify that the UTXO's value is properly allocated among the transaction outputs.
 
-Given that UTXO values may span up to 51 bits, OP_CHECKCONTRACTVERIFY would benefit from 64-bit arithmetic support to perform such verifications.[https://delvingbitcoin.org/t/op-inout-amount/549/5?u=chris_stewart_5 A case study on how OP_CHECKCONTRACTVERIFY can use 64-bith arithmetic]
+Given that UTXO values may span up to 51 bits, OP_CHECKCONTRACTVERIFY would benefit from 64-bit arithmetic support to perform such verifications.<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/5?u=chris_stewart_5 A case study on how OP_CHECKCONTRACTVERIFY can use 64-bith arithmetic]</ref>
 
 ===OP_VAULT===
 
