@@ -29,9 +29,9 @@ Several soft fork proposals require support for at least 51 bits of precision in
 While it is technically possible<ref>[https://rusty.ozlabs.org/2023/10/22/amounts-in-script.html A proof of concept demonstrating how to circumvent the precision limits in the original Bitcoin protocol]</ref>
 to operate on such values within the original Script design, doing so is inefficient and error-prone.
 
-===OP_INOUT_AMOUNT===
+===OP_IN_AMOUNT, OP_OUT_AMOUNT===
 
-OP_INOUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_INOUT_AMOUNT]</ref> is proposed as part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATEVERIFY]</ref> soft fork.
+OP_IN_AMOUNT, OP_OUT_AMOUNT<ref>[https://delvingbitcoin.org/t/op-inout-amount/549/3 OP_IN_AMOUNT, OP_OUT_AMOUNT]</ref> is proposed as part of the OP_TAPLEAFUPDATEVERIFY<ref>[https://gnusha.org/pi/bitcoindev/20210909064138.GA22496@erisian.com.au/ OP_TAPLEAFUPDATEVERIFY]</ref> soft fork.
 This opcode pushes two values onto the stack, corresponding to the sum of input values and output values of the transaction being validated.
 
 Because UTXO values may reach up to 51 bits, supporting 64-bit arithmetic operations is necessary to enable correct manipulation of these values.
