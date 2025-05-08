@@ -17,7 +17,7 @@ This BIP proposes to extend the range of numeric operands in Script from -2^<sup
 It further expands the result range for arithmetic operations from -2^<sup>63</sup> to 2^<sup>63</sup>-1, to -2^<sup>127</sup> to 2^<sup>127</sup>-1.
 
 All existing opcodes<ref>[https://github.com/bitcoin/bitcoin/blob/223fc24c4ebc8dbaecf59ccd36e49193b58d422b/src/script/interpreter.cpp#L944 List of opcodes interpreting stack elements as numbers: OP_ADD, OP_SUB, OP_BOOLAND, OP_BOOLOR, OP_NUMEQUAL, OP_NUMEQUALVERIFY, OP_NUMNOTEQUAL, OP_LESSTHAN, OP_GREATERTHAN, OP_LESSTHANOREQUAL, OP_GREATERTHANOREQUAL, OP_MIN, OP_MAX, OP_1ADD, OP_1SUB, OP_NEGATE, OP_ABS, OP_NOT, OP_0NOTEQUAL]</ref> 
-that interpret stack elements as numbers are upgraded to support 64-bit parameters, with the exception of OP_CHECKTIMELOCKVERIFY and OP_CHECKSEQUENCEVERIFY.
+that interpret stack elements as numbers are upgraded to support 64-bit parameters.
 
 The existing number encoding format<ref>[https://delvingbitcoin.org/t/64-bit-arithmetic-soft-fork/397/6?u=chris_stewart_5 The original Script number encoding: minimal-length little-endian, sign-magnitude format]</ref> 
 and arithmetic semantics<ref>[https://github.com/bitcoin/bitcoin/blob/257fd27e4bb7dfd71e5f9f4dd2db34ff5a7ad957/src/script/script.h#L231 Handling of overflows in Script: CScriptNum stores results as int64, permitting out-of-range values until further arithmetic is performed]</ref> 
@@ -64,11 +64,12 @@ Given that Bitcoin amounts can occupy up to 51 bits, OP_AMOUNTVERIFY and related
 OP_CHECKSEQUENCEVERIFY and OP_CHECKLOCKTIMEVERIFY interpret absolute and relative locktime values based on transaction fields that are limited to 32 bits of precision.
 Validation of these values also depends on median-time-past as defined in BIP113.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki BIP113]</ref>
 The maximum allowable median-time-past value on the Bitcoin network is 0xfffffffe.<ref>[https://github.com/bitcoin/bitcoin/pull/32229 This PR explicitly tests the maximum median-time-past limit on the Bitcoin network. The results demonstrate that the maximum median-time-past allowed is 0xfffffffe.]</ref>
-Extending the numeric range for these opcodes would not yield additional expressiveness, as resulting scripts would remain unsatisfiable.
+Extending the numeric range for these opcodes would not yield additional expressiveness for now - however we could expand the precision of these OP_CLTV/OP_CSV
+by using the BIP341's annex.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki#cite_note-5 What is an annex? The annex is a reserved space for future extensions, such as extending precision of locktime/sequence fields.]</ref>
 
-A potential drawback of not expanding these opcodes to accept 8-byte parameters is the quality of error reporting.
-If an operand passed to OP_CLTV or OP_CSV exceeds 5 bytes, Script execution fails with an overflow error.<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propagate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)`, which does not clearly indicate the cause of failure]</ref>
-Allowing 64-bit operands could enable clearer and more informative failure modes when locktime validation fails.
+A benefit expanding these opcodes to accept 8-byte parameters is the quality of error reporting.
+Instead of Script execution failing with an overflow error<ref>[https://delvingbitcoin.org/t/overflow-handling-in-script/1549#p-4652-background-3 Overflows propagate a cryptic error message `mandatory-script-verify-flag-failed (unknown error)`, which does not clearly indicate the cause of failure]</ref>
+the Script would terminate with an error indicating the locktime was not satisfied.
 
 ===Larger precision than 64 bits===
 
