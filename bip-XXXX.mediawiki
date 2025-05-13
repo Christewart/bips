@@ -73,8 +73,7 @@ the Script would terminate with an error indicating the locktime was not satisfi
 
 ===Larger precision than 64 bits===
 
-BIP342<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes the size check for the initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements larger than 520 bytes could uplift the limit in a soft fork]</ref>
-permits the introduction of new opcodes that bypass the 520-byte push size limitation.
+BIP342 permits the introduction of new opcodes that bypass the 520-byte push size limitation.<ref>[https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki Since OP_SUCCESSx precedes the size check for the initial stack and push opcodes, an OP_SUCCESSx-derived opcode requiring stack elements larger than 520 bytes could uplift the limit in a soft fork]</ref>
 This mechanism could theoretically allow for arbitrary-precision numeric operations.
 However, the scope of this BIP is intentionally limited to supporting 64 bits of precision, sufficient for expressing native Bitcoin amounts.
 
