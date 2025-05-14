@@ -715,7 +715,7 @@ required for aggregation. If sorting was done, then the keys must be in the sort
 | [[bip-0375.mediawiki|375]]
 |-
 | Silent Payment Label
-| <tt>PSBT_OUT_SP_V0_LABEL = 0x10</tt>
+| <tt>PSBT_OUT_SP_V0_LABEL = 0x0a</tt>
 | None
 | No key data
 | <tt><32-bit little endian uint label></tt>
@@ -762,7 +762,7 @@ the key.
 
 ===Handling Duplicated Keys===
 
-Keys within each scope should never be duplicated; all keys in the format are unique. PSBTs containing duplicate keys are invalid. However implementors
+Keys within each scope should never be duplicated; all keys in the format are unique. PSBTs containing duplicate keys are invalid. However implementers
 will still need to handle events where keys are duplicated when combining transactions with duplicated fields. In this event, the software may choose
 whichever value it wishes.<ref>'''Why can the values be arbitrarily chosen?''' When there are duplicated keys, the values that can be chosen will either be
 valid or invalid. If the values are invalid, a signer would simply produce an invalid signature and the final transaction itself would be invalid. If the
